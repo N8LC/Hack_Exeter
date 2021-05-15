@@ -1,0 +1,58 @@
+# Nathan Carter
+# May 13th, 2021
+# HackExeter
+
+import pyautogui as p
+import socket
+import ipinfo
+import urllib.request as url
+import webbrowser as w
+import time
+
+def google_maps(l_lat, l_long, lat, long):
+    google_site = ("https://www.google.com/maps/dir/\
+" + l_lat + "," + l_long + "//@" + lat + "," + long + "\
+,20z")
+    w.open(google_site, new=1)
+    time.sleep(4)
+    p.click(650, 400)
+
+
+# Introduction
+print('''Welcome to the La Festa distance finder 5000! This program is made
+to find how far you are away from La Festas (My Favorite Pizza Place) on google
+maps!''')
+time.sleep(3)
+
+# IP address of the user using socket - Taken 
+hostname = socket.gethostname()    
+IPAddr = socket.gethostbyname(hostname)    
+
+# Grab the IP Adress
+token = "08a62495eb0f9a"
+handler = ipinfo.getHandler(token)
+ip = IPAddr
+lafesta_coordinates = ["43.1941337", "-70.8747816"]
+details = handler.getDetails(ip)
+detail_list = details.all
+
+
+# Coordinates of where you are
+coordinates = [detail_list["latitude"], detail_list["longitude"]]
+
+# Brings you to your location on google maps
+try:
+    google_maps(lafesta_coordinates[0], lafesta_coordinates[1], coordinates[0], coordinates[1])
+except:
+    print("Looks Like your location is not available through your IP")
+    coor = input("Do you know your current coordinents?(y/n) ")
+    if coor.lower() == "y":
+        coordinates.clear()
+        lat = input("What is the latitude? ")
+        long = input("What is the longitude? ")
+        coordinates.append(lat)
+        coordinates.append(long)
+        google_maps(lafesta_coordinates[0], lafesta_coordinates[1], coordinates[0], coordinates[1])
+    else:
+        print("Thank you for trying out this program, sorry it didn't work :(")
+        
